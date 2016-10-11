@@ -5,70 +5,63 @@ var gulp = require('gulp'),
     gulpSequence = require('gulp-sequence'),
     rollup = require('gulp-rollup'),
     rename = require('gulp-rename'),
-    rollupConfig = require('./rollup.config');
-const autoCompileGulpTask = require('wx-compile-key').autoCompileGulpTask;
+    rollupConfig = require('./rollup.config'),
+    config = require('./config');
 
-
-
-var Asset = {
-    js: 'src/pages/**/**.js',
-    sass: 'src/**/**.scss',
-    wxml: 'src/**/**.wxml',
-    json: 'src/**/**.json'
-}
 
 //clean dist files
 gulp.task('clean', function() {
-  return gulp.src('dist')
+  return gulp.src(`${config.distPath}`)
     .pipe(clean());
 });
 
 //copy files
 gulp.task('copy', function() {
-  return gulp.src('src/*')
-    .pipe(gulp.dest('dist/'));
+  return gulp.src(`${config.basePath}/*`)
+    .pipe(gulp.dest(`${config.distPath}/`));
 });
 
 //parseJs
 gulp.task('parseJs', function() {
-  return gulp.src([Asset.js, ]).
+  return gulp.src([`${config.Asset.js}`, ]).
     pipe(sourcemaps.init()).
     pipe(rollup(rollupConfig)).
     pipe(sourcemaps.write('.')).
-    pipe(gulp.dest('dist/pages'));
-})
+    pipe(gulp.dest(`${config.distPath}/pages`));
+});
 
 //parseWxml
 gulp.task('parseWxml', function() {
-  return gulp.src(Asset.wxml)
-    .pipe(gulp.dest('dist/'));
+  return gulp.src(`${config.Asset.wxml}`)
+    .pipe(gulp.dest(`${config.distPath}/`));
 });
 
 //parseSass
 gulp.task('parseSass', function() {
-  return gulp.src(Asset.sass)
+  return gulp.src(`${config.Asset.sass}`)
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(rename(function(path) {
       path.extname = ".wxss"
     }))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('dist/'));
+    .pipe(gulp.dest(`${config.distPath}/`));
 });
 
 //parseJson
 gulp.task('parseJson', function() {
-  return gulp.src(Asset.json)
-    .pipe(gulp.dest('dist/'));
+  return gulp.src(`${config.Asset.json}`)
+    .pipe(gulp.dest(`${config.distPath}/`));
 });
 
 //watch
 gulp.task('watch', function() {
-  gulp.watch(Asset.js, ['parseJs']);
-  gulp.watch(Asset.sass, ['parseSass']);
-  gulp.watch(Asset.wxml, ['parseWxml']);
-  gulp.watch(Asset.json, ['parseJson']);
+  gulp.watch(`${config.Asset.pagejs}`, ['parsePageJs']);
+  gulp.watch(`${config.Asset.componentjs}`, ['parsePageJs']);
+  gulp.watch(`${config.Asset.sass}`, ['parseSass']);
+  gulp.watch(`${config.Asset.wxml}`, ['parseWxml']);
+  gulp.watch(`${config.Asset.json}`, ['parseJson']);
 });
 
 //build
-gulp.task('build', gulpSequence('clean', 'copy', 'parseJs', 'parseJson','parseWxml', 'parseSass'));
+gulp.task('build', gulpSequence('clean', 'copy' ,'parseJs', 'parseJson', 'parseWxml', 'parseSass'));

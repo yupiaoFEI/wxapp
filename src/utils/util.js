@@ -1,4 +1,4 @@
-export function formatTime(date) {
+function formatTime(date) {
   var year = date.getFullYear()
   var month = date.getMonth() + 1
   var day = date.getDate()
@@ -11,19 +11,26 @@ export function formatTime(date) {
   return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
 }
 
-export function formatNumber(n) {
+function formatNumber(n) {
   n = n.toString()
   return n[1] ? n : '0' + n
 }
 
 
-export function square ( x ) {
+function square ( x ) {
 	return x * x;
 }
 
 // This function gets included
-export function cube ( x ) {
+function cube ( x ) {
 	// rewrite this as `square( x ) * x`
 	// and see what happens!
 	return x * x * x;
+}
+
+export {
+  formatTime,
+  formatNumber,
+  square,
+  cube
 }
