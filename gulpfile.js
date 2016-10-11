@@ -6,6 +6,8 @@ var gulp = require('gulp'),
     rollup = require('gulp-rollup'),
     rename = require('gulp-rename'),
     rollupConfig = require('./rollup.config');
+const autoCompileGulpTask = require('wx-compile-key').autoCompileGulpTask;
+
 
 
 var Asset = {
@@ -17,12 +19,14 @@ var Asset = {
 
 //clean dist files
 gulp.task('clean', function() {
-  return gulp.src('dist').pipe(clean());
+  return gulp.src('dist')
+    .pipe(clean());
 });
 
 //copy files
 gulp.task('copy', function() {
-  return gulp.src('src/*').pipe(gulp.dest('dist/'));
+  return gulp.src('src/*')
+    .pipe(gulp.dest('dist/'));
 });
 
 //parseJs
@@ -36,22 +40,26 @@ gulp.task('parseJs', function() {
 
 //parseWxml
 gulp.task('parseWxml', function() {
-  return gulp.src(Asset.wxml).pipe(gulp.dest('dist/'));
+  return gulp.src(Asset.wxml)
+    .pipe(gulp.dest('dist/'));
 });
 
 //parseSass
 gulp.task('parseSass', function() {
-  return gulp.src(Asset.sass).
-    pipe(sass().on('error', sass.logError)).
-    pipe(rename(function(path) {
+  return gulp.src(Asset.sass)
+    .pipe(sourcemaps.init())
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename(function(path) {
       path.extname = ".wxss"
-    })).
-    pipe(gulp.dest('dist/'));
+    }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('dist/'));
 });
 
 //parseJson
 gulp.task('parseJson', function() {
-  return gulp.src(Asset.json).pipe(gulp.dest('dist/'));
+  return gulp.src(Asset.json)
+    .pipe(gulp.dest('dist/'));
 });
 
 //watch
