@@ -1,6 +1,5 @@
 //logs.js
-// var util = require('../../utils/util.js')
-import util from '../../utils/util'
+import {square,formatTime} from '../../utils/util'
 Page({
   data: {
     logs: []
@@ -8,7 +7,7 @@ Page({
   onLoad: function () {
     this.setData({
       logs: (wx.getStorageSync('logs') || []).map(function (log) {
-        return util.formatTime(new Date(log))
+        return formatTime(new Date(log))
       })
     })
   }

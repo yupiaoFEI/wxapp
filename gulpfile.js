@@ -5,55 +5,54 @@ var gulp = require('gulp'),
   rollup = require('gulp-rollup'),
   rollupConfig = require('./rollup.config');
 
+var Asset = {
+  js:'src/pages/**/**.js',
+  wxss:'src/**/**.wxss',
+  wxml:'src/**/**.wxml',
+  json:'src/**/**.json'
+}
+
 //clean dist files
 gulp.task('clean', function() {
-  gulp.src('dist/*').pipe(clean());
+  return gulp.src('dist').pipe(clean());
+});
+
+gulp.task('copy', function() {
+  return gulp.src('src/*').pipe(gulp.dest('dist/'));
 });
 
 //parseJs
 gulp.task('parseJs', function () {
-  gulp.src([
-    'src/**/**.js',
+  return gulp.src([
+    Asset.js,
   ])
   .pipe(sourcemaps.init())
   .pipe(rollup(rollupConfig))
   .pipe(sourcemaps.write('.'))
-  .pipe(gulp.dest('dist'));
+  .pipe(gulp.dest('dist/pages'));
 })
 
 //parseWxml
 gulp.task('parseWxml', function() {
-  return gulp.src('src/**/**.wxml').pipe(gulp.dest('dist/'));
+  return gulp.src(Asset.wxml).pipe(gulp.dest('dist/'));
 });
 
 //parseWxss
 gulp.task('parseWxss', function() {
-  return gulp.src('src/**/**.wxss').pipe(gulp.dest('dist/'));
+  return gulp.src(Asset.wxss).pipe(gulp.dest('dist/'));
 });
 
 //parseJson
 gulp.task('parseJson', function() {
-  return gulp.src('src/**/**.json').pipe(gulp.dest('dist/'));
+  return gulp.src(Asset.json).pipe(gulp.dest('dist/'));
+});
+
+gulp.task('watch',function(){
+  gulp.watch(Asset.js, ['parseJs']);
+  gulp.watch(Asset.wxss, ['parseWxss']);
+  gulp.watch(Asset.wxml, ['parseWxml']);
+  gulp.watch(Asset.json, ['parseJson']);
 });
 
 //build
-gulp.task('build', gulpSequence('clean', 'parseJs','parseJson','parseWxml','parseWxss'));
-
-//watch wxml js wxss
-gulp.watch('src/**/**.wxml', function (event) {
-  gulpSequence('parseWxml')(function (err) {
-    if (err) console.log(err)
-  })
-})
-
-gulp.watch('src/**/**.js', function (event) {
-  gulpSequence('parseJs')(function (err) {
-    if (err) console.log(err)
-  })
-})
-
-gulp.watch('src/**/**.wxss', function (event) {
-  gulpSequence('parseWxss')(function (err) {
-    if (err) console.log(err)
-  })
-})
+gulp.task('build', gulpSequence('clean','copy', 'parseJs','parseJson','parseWxml','parseWxss'));
