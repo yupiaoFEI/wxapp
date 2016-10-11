@@ -1,6 +1,7 @@
 //logs.js
 // var util = require('../../utils/util.js')
-import util from '../../utils/util'
+// import util from '../../utils/util'
+let util
 Page({
   data: {
     logs: []
