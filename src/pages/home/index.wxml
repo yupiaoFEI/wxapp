@@ -1,0 +1,84 @@
+<!--index.wxml-->
+<template name='movielist'>
+    <navigator url="../movie/index?id={{item.id}}&buy_flag={{item.buy_flag}}">
+      <view class="movie-item">
+        <image src="{{item.poster_url}}" />
+        <view class="movie-info">
+          <view class='flex'>
+            <view class="name flex-auto ell">{{item.name}}</view>
+            <view wx:if="{{item.will_flag}}">
+              <text class='Score'>{{item.wantCount}}想看</text>
+            </view>
+            <view wx:else>
+              <text class='Score'>{{item.score}}分</text>
+            </view>
+          </view>
+          <view>
+            <text class="remark ell">{{item.remark}}</text>
+          </view>
+          <view class='info-container'>
+            <view class='basic-info ell'>
+              <text class="actor ellipsis ell">{{item.actor}}</text>
+            </view>
+            <view class="buy-btn" catchtap="buyMovie" data-movieid="{{item.id}}">
+              <text class="button" wx:if='{{item.will_flag && item.buy_flag}}'>预售</text>
+              <text class="button button--inverse" wx:elif='{{item.buy_flag}}'>购买</text>
+            </view>
+          </view>
+          <view class='date'>
+            <text class="time" wx:if="{{item.will_flag}}">{{item.date_des}}上映</text>
+          </view>
+        </view>
+      </view>
+    </navigator>
+</template>
+<include src="../../components/toast.wxml" />
+<include src="../../components/action-sheet.wxml" />
+<loading wx:if="{{loading && !items.length}}">
+</loading>
+<view class='movie'>
+  <view>
+    <view class="Header">
+      <view class='city'>
+        <view class='logo'></view>
+        <text bindtap='routeCitylist'>{{cityCurrent}}</text>
+      </view>
+      <view class='Tabs--line'>
+        <view class='Tabs__nav'>
+          <view class='Tabs__item Tabs_now' bindtap='now' data-status='now'>
+            <text class='Tabs__link {{Tabs_now_begin}}'>正在上映</text>
+          </view>
+          <view class='Tabs__item Tabs_coming' bindtap='coming' data-status='coming'>
+            <text class='Tabs__link'>即将上映</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <block wx:if='{{itemsEmpty}}'>
+    <view class='Home__Loading flex-columns'>
+      <view class='Home__Row'>
+        <text>当前城市暂未开通购票影院</text>
+        <text>敬请期待！</text>
+      </view>
+      <view class='Home__Row'>
+        <text>客服电话：</text>
+        <text class='blue'>4001-100-100</text>
+      </view>
+    </view>
+  </block>
+  <block wx:else>
+    <scroll-view scroll-y='true' class="movie-list" bindscrolltolower='refresh' data-status='{{status}}'>
+      <block wx:for-items="{{status ? items : itemsComing}}">
+          <template is='movielist' data='{{item}}'></template>
+      </block>
+      <view class="load-more-wrap">
+        <block wx:if="{{hasMore}}">
+          <view class="load-content">
+            <text class="weui-loading" />
+          </view>
+        </block>
+      </view>
+    </scroll-view>
+  </block>
+</view>

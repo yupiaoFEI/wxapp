@@ -1,0 +1,6 @@
+<toast hidden="{{!__toast__.shown}}" 
+    class="toast-message"
+    duration="{{__toast__.duration || 1500}}"
+    bindchange="__toast__change">
+   {{ __toast__.message }}
+</toast>

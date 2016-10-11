@@ -1,0 +1,14 @@
+<action-sheet hidden="{{!__action__sheet__.shown}}" 
+    bindchange="__action__sheet__change">
+    <block wx:for="{{__action__sheet__.actions}}">
+        <action-sheet-item class="action-sheet-item"
+            bindtap="__action__sheet__tap"
+            data-name="{{item}}" data-id="{{index}}">
+            {{ item }}
+        </action-sheet-item>
+    </block>
+    <!-- cancel action trigger function(false) {} -->
+    <action-sheet-cancel class="action-sheet-cancel">
+    {{ __action__sheet__.cancelText || '取消' }}
+    </action-sheet-cancel>
+</action-sheet>

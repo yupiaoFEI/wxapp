@@ -1,0 +1,10 @@
+<modal hidden="{{!__modal__.shown}}" 
+    title="{{__modal__.title}}"
+    confirm-text="{{__modal__.confirmText}}"
+    cancel-text="{{__modal__.cancelText}}"
+    no-cancel="{{!__modal.cancelText}}"
+    bindcancel="__modal__change" bindconfirm="__modal__change">
+   <view class="modal-message">
+   {{ __modal__.message }}
+   </view>
+</modal>

@@ -1,5 +1,5 @@
 //logs.js
-import {square,formatTime} from '../../utils/util'
+import * as util from '../../utils/util'
 Page({
   data: {
     logs: []
@@ -7,7 +7,7 @@ Page({
   onLoad: function () {
     this.setData({
       logs: (wx.getStorageSync('logs') || []).map(function (log) {
-        return formatTime(new Date(log))
+        return util.guid();
       })
     })
   }
